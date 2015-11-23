@@ -1,0 +1,53 @@
+import pandas as pd
+import datetime
+import time
+import selenium
+from lxml import html
+import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException
+
+
+#start driver
+def init_driver():
+    driver = webdriver.Firefox()
+    driver.wait = WebDriverWait(driver, 5)
+    return driver
+   
+#find element & click until page is fully expanded
+
+def lookup(driver):
+    driver.get("https://www.coursera.org/courses/?languages=en&limit=100")
+    try: 
+    	try: 
+    		while driver.find_element_by_class_name("c-show-more-button").is_enabled():
+    			driver.find_element_by_class_name("c-show-more-button").click()
+    			if not driver.find_element_by_class_name("c-show-more-button").is_enabled():
+    				break  	
+    	except TimeoutException:
+    		print("Button not found.")
+    #pull out each link; remove specializations
+    	links = driver.find_elements_by_class_name("rc-OfferingCard") 
+    	class_links = []
+    	for x in links:
+    		h = x.get_attribute('href')
+    		class_links.append(h)
+    	clean_links = [z for z in class_links if not 'specializations' in z]
+
+    except NoSuchElementException:
+    	print ("Button not found. End of page.")
+
+
+
+if __name__ == "__main__":
+    driver = init_driver()
+    lookup(driver)
+    time.sleep(5)
+    driver.quit()
+    
+    
+
