@@ -57,11 +57,11 @@ def lookup(driver):
     		except NoSuchElementException:
     			dc['session_dates'] = 'undefined'	
     			print "No dates found."
-			try:
-				driver.find_element_by_class_name("instructor-name")
-				dc['instructor'] = driver.find_element_by_class_name("instructor-name")
-			except NoSuchElementException:
-				dc['instructor'] = 'undefined'
+		try:
+			driver.find_element_by_class_name("instructor-name")
+			dc['instructor'] = driver.find_element_by_class_name("instructor-name")
+		except NoSuchElementException:
+			dc['instructor'] = 'undefined'
     			print "No instructor found."
     		try:
     			driver.find_element_by_class_name("course-partners")
