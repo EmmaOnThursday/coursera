@@ -1,9 +1,6 @@
-import pandas as pd
 import datetime
 import time
 import selenium
-from lxml import html
-import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,77 +9,102 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
 
 
-#start driver
+#start first driver
 def init_driver():
     driver = webdriver.Firefox()
     driver.wait = WebDriverWait(driver, 5)
     return driver
-   
-#find next page button  OR "load more" button & click until page is fully expanded
+    
+#find next page button & click until page is fully expanded
 
 def lookup(driver):
-    driver.get("https://www.coursera.org/courses/?languages=en")
-    try: 
-    	if driver.find_element_by_class_name("c-show-more-button"):
-    		while driver.find_element_by_class_name("c-show-more-button").is_enabled():
-    			driver.find_element_by_class_name("c-show-more-button").click()
-    		pass
-    	elif driver.find_element_by_class_name("cif-chevron-right"):
-    		while driver.find_element_by_class_name("cif-chevron-right").find_element_by_xpath('..').is_enabled():
-    			driver.find_element_by_class_name("cif-chevron-right").find_element_by_xpath('..').click()
-    	else:
-    		print "Buttons not found. Please check https://www.coursera.org/courses/?languages=en."
-    #pull out each link; remove specializations
-    	links = driver.find_elements_by_class_name("rc-OfferingCard") 
-    	class_links = []
-    	for x in links:
-    		h = x.get_attribute('href')
-    		class_links.append(h)
-    	clean_links = [z for z in class_links if not 'specializations' in z]
-    #for each link: build a dictionary and append to 'data'	
-    	data = []
-    	for x in clean_links[0:5]:
-    		driver.get(x)
-    		dc = {}
-    		#need to initialize a driver that waits until page loads relevant element course_name
-    		try:
-    			WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "course-name")))
-    			dc['course_name'] = driver.find_element_by_class_name("course-name")
-    		except NoSuchElementException:
-    			dc['course_name'] = 'undefined'
-    			print "No course name found."
-    		try: 
-    			driver.find_element_by_class_name("session-date")
-    			dc['session_dates'] = driver.find_element_by_class_name("session-date")
-    		except NoSuchElementException:
-    			dc['session_dates'] = 'undefined'	
-    			print "No dates found."
-		try:
-			driver.find_element_by_class_name("instructor-name")
-			dc['instructor'] = driver.find_element_by_class_name("instructor-name")
-		except NoSuchElementException:
-			dc['instructor'] = 'undefined'
-    			print "No instructor found."
-    		try:
-    			driver.find_element_by_class_name("course-partners")
-    			dc['partner'] = driver.find_element_by_class_name("course-partners")
-    		except NoSuchElementException:
-    			dc['partner'] = 'undefined' 
-    			print "No partner institution found."
-    		data.append(dc)
-    		print "dc appended to data"
-    except NoSuchElementException:
-    	print ("Button not found. End of page.")
+    data2 = [{"course_name":"Python", "instructor": "Teach1", "partner":"Cal"}, {"course_name":"Ruby", "instructor": "Teach2", "partner":"UVA"}, {"course_name":"SQL","instructor":"Teach3", "partner":"Yale"}]
+    return data2
+    #driver.get("https://www.coursera.org/courses/?languages=en")
+#    try: 
+#        try: 
+#            driver.find_element_by_class_name("c-show-more-button")
+#            pass
+#            #while driver.find_element_by_class_name("c-show-more-button").is_enabled():
+#            #    driver.find_element_by_class_name("c-show-more-button").click()
+#        except NoSuchElementException:
+#            try: 
+#                driver.find_element_by_class_name("cif-chevron-right")
+#                arrow = driver.find_element_by_class_name("cif-chevron-right")
+#                while arrow.find_element_by_xpath('..').is_enabled():
+#                    arrow.find_element_by_xpath('..').click()
+#            except NoSuchElementException:
+#                print ("Buttons not found. Please check https://www.coursera.org/courses/?languages=en.")
+#    #pull out each link; remove specializations
+#        links = driver.find_elements_by_class_name("rc-OfferingCard") 
+#        class_links = []
+#        for x in links:
+#            h = x.get_attribute('href')
+#            class_links.append(h)
+#        clean_links = [z for z in class_links if not 'specializations' in z]
+#    #for each link: build a dictionary and append to 'data' 
+#        data = []
+#        for x in clean_links[0:5]:
+#            driver.get(x)
+#            dc = {}
+#            #need to initialize a driver that waits until page loads relevant element course_name
+#            try:
+#                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "c-coursePage-body-container")))
+#                dc['course_name'] = driver.find_element_by_class_name("course-name").text
+#            except NoSuchElementException:
+#                dc['course_name'] = 'undefined'
+#                print ("No course name found.")
+#            #try: 
+#             #   driver.find_element_by_class_name("session-date")
+#              #  dc['session_dates'] = driver.find_element_by_class_name("session-date").text
+#            #except NoSuchElementException:
+#             #   dc['session_dates'] = 'undefined'   
+#             #   print ("No dates found.")
+#            try:
+#                driver.find_element_by_class_name("instructor-name")
+#                dc['instructor'] = driver.find_element_by_class_name("instructor-name").text
+#            except NoSuchElementException:
+#                dc['instructor'] = 'undefined'
+#                print ("No instructor found.")
+#            try:
+#                driver.find_element_by_class_name("course-partners")
+#                dc['partner'] = driver.find_element_by_class_name("course-partners").text
+#            except NoSuchElementException:
+#                dc['partner'] = 'undefined' 
+#                print ("No partner institution found.")
+#            data.append(dc)
+#            return data
+#            print ("break point")
+#    except NoSuchElementException:
+#        print ("Button not found. End of page.")
 
-#date handling
-#load to postgres
+#set up sqlite environment
+import sqlite3 as sql
+coursera = sql.connect('coursera')
+cursor = coursera.cursor()
+cursor.execute('DROP TABLE IF EXISTS courses')
+cursor.execute('''CREATE TABLE IF NOT EXISTS courses(course TEXT PRIMARY KEY, instructor TEXT, institution TEXT)''')
 
+
+def load_function(data_list, db):
+    try:
+        for item in data_list:
+            cursor.execute('''INSERT INTO courses(course, instructor, institution) VALUES(:course_name, :instructor, :partner)''', (item))
+            db.commit()
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        db.close()
 
 
 if __name__ == "__main__":
     driver = init_driver()
-    lookup(driver)
-    print "completed lookup"
+    data = lookup(driver)
+    print ("Completed lookup.")
     time.sleep(5)
     driver.quit()
-    print "ended: driver quit"
+    print ("Driver closed.")
+    load_function(data, coursera)
+
+   
