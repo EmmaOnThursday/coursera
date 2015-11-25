@@ -81,6 +81,8 @@ def lookup(driver):
                print ("No partner institution found.")
            data.append(dc)
        return data
+       df = pd.DataFrame(data)
+       df.to_csv("courses.csv", sep='\t')
     except NoSuchElementException:
        print ("Button not found. End of page.")
 
