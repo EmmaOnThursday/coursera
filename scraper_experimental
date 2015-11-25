@@ -46,7 +46,7 @@ def lookup(driver):
                       clean_links = [z for z in class_links if not 'specializations' in z]
                     arrow.find_element_by_xpath('..').click()
                    except StaleElementReferenceException:
-                    print("Page not loaded")
+                    pass
            except NoSuchElementException:
                print ("Buttons not found. Please check https://www.coursera.org/courses/?languages=en.")
    #for each link: build a dictionary and append to 'data' 
