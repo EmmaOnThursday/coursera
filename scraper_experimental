@@ -19,6 +19,7 @@ def init_driver():
 #find next page button & click until page is fully expanded
 
 def lookup(driver):
+    #first two lines, commented out, for testing load function in case lookup runs into a/b tests
     #data2 = [{"course_name":"Python", "instructor": "Teach1", "partner":"Cal"}, {"course_name":"Ruby", "instructor": "Teach2", "partner":"UVA"}, {"course_name":"SQL","instructor":"Teach3", "partner":"Yale"}]
     #return data2
     driver.get("https://www.coursera.org/courses/?languages=en")
@@ -61,7 +62,7 @@ def lookup(driver):
            except NoSuchElementException:
                dc['course_name'] = 'undefined'
                print ("No course name found.")
-           #try: 
+           #try: commented out because date classes in coursera keep changing... 
              #  driver.find_element_by_class_name("session-date")
              #  dc['session_dates'] = driver.find_element_by_class_name("session-date").text
            #except NoSuchElementException:
@@ -93,7 +94,7 @@ cursor = coursera.cursor()
 cursor.execute('DROP TABLE IF EXISTS courses')
 cursor.execute('''CREATE TABLE IF NOT EXISTS courses(id INTEGER PRIMARY KEY AUTOINCREMENT, course TEXT, instructor TEXT, institution TEXT)''')
 
-
+#load data to sqlite
 def load_function(data_list, db):
     try:
         for item in data_list:
@@ -115,4 +116,4 @@ if __name__ == "__main__":
     #driver.quit()
     print ("Driver closed.")
     row1 = load_function(data, coursera)
-    print row1
+    print (row1)
