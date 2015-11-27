@@ -1,6 +1,7 @@
 import datetime
 import time
 import selenium
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -81,9 +82,9 @@ def lookup(driver):
                dc['partner'] = 'undefined' 
                print ("No partner institution found.")
            data.append(dc)
-       return data
        df = pd.DataFrame(data)
        df.to_csv("courses.csv", sep='\t')
+       return data
     except NoSuchElementException:
        print ("Button not found. End of page.")
 
